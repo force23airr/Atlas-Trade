@@ -1,0 +1,10 @@
+[workspace]
+members = [
+    "crates/atlas-compliance",
+    "crates/atlas-fulfiller",
+    "crates/atlas-middleware",
+    "crates/atlas-registry",
+    "crates/atlas-sdk",
+    "crates/atlas-trade",
+]
+resolver = "2"
