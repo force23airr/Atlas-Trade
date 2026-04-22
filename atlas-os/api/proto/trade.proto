@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package atlas.trade.v1;
+
+// Status of a trade escrow.
+enum EscrowStatus {
+  ESCROW_STATUS_UNSPECIFIED = 0;
+  ESCROW_STATUS_AWAITING_ARRIVAL = 1;
+  ESCROW_STATUS_FUNDS_LOCKED = 2;
+  ESCROW_STATUS_SETTLED = 3;
+  ESCROW_STATUS_DISPUTED = 4;
+}
+
+// GPS coordinates for vessel tracking.
+message Coordinates {
+  float latitude = 1;
+  float longitude = 2;
+}
+
+// Detailed state of a trade escrow.
+message TradeEscrow {
+  string trade_id = 1;
+  double amount = 2;
+  string vessel_handle = 3; // e.g., "tanker-alpha.usdc"
+  Coordinates target_coordinates = 4;
+  EscrowStatus status = 5;
+}
+
+message ReleaseOnArrivalRequest {
+  string trade_id = 1;
+  Coordinates current_coordinates = 2;
+}
+
+message ReleaseOnArrivalResponse {
+  bool success = 1;
+  string message = 2;
+  EscrowStatus new_status = 3;
+}
+
+// TradeService handles the lifecycle and "Magic Trigger" of trade escrows.
+service TradeService {
+  // Triggered by a GPS Oracle when a vessel matches the geofence.
+  rpc TriggerReleaseOnArrival(ReleaseOnArrivalRequest) returns (ReleaseOnArrivalResponse);
+}

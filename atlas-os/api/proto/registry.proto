@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package atlas.registry.v1;
+
+// EntityType categorizes handles for trade participants.
+enum EntityType {
+  ENTITY_TYPE_UNSPECIFIED = 0;
+  ENTITY_TYPE_GOVERNMENT = 1;
+  ENTITY_TYPE_CORPORATION = 2;
+  ENTITY_TYPE_VESSEL = 3;
+  ENTITY_TYPE_INDIVIDUAL = 4;
+}
+
+// DomainRecord stores information about a .usdc domain.
+message DomainRecord {
+  string owner = 1;
+  string target_address = 2;
+  EntityType entity_type = 3;
+}
+
+message RegisterRequest {
+  string domain = 1;         // e.g., "vessel-alpha.usdc"
+  string owner = 2;          // Controlling address
+  string target_address = 3; // Settlement address
+  EntityType entity_type = 4;
+}
+
+message RegisterResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message ResolveRequest {
+  string domain = 1;
+}
+
+message ResolveResponse {
+  string target_address = 1;
+}
+
+message UpdateTargetRequest {
+  string domain = 1;
+  string caller = 2; // Address attempting the update
+  string new_target = 3;
+}
+
+message UpdateTargetResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message TransferRequest {
+  string domain = 1;
+  string caller = 2; // Address attempting the transfer
+  string new_owner = 3;
+}
+
+message TransferResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// RegistryService manages the mapping of .usdc handles to addresses.
+service RegistryService {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Resolve(ResolveRequest) returns (ResolveResponse);
+  rpc UpdateTarget(UpdateTargetRequest) returns (UpdateTargetResponse);
+  rpc Transfer(TransferRequest) returns (TransferResponse);
+}
