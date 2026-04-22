@@ -1,0 +1,10 @@
+[package]
+name = "atlas-sdk"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.0", features = ["derive"] }
+atlas-registry = { path = "../atlas-registry" }
+atlas-trade = { path = "../atlas-trade" }
+serde = { version = "1.0", features = ["derive"] }
